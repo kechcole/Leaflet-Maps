@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Location Application</title>
+
+    <!-- 1. Reference hoisted css and js files  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+
+
+    <style>
+        body {
+            margin: auto;
+            padding: 5px;
+            width: 50%;
+
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+            border: 2px solid;
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>A Simple Routing Application created Using Leaflet JS</h1>
+
+    <!-- Element that holds the map.  -->
+    <div id="map" style="width: 600px; height: 400px"></div>
+
+</body>
+
+<!-- JS file  -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+    </script>
+
+<script>
+    // 2. Initialise the map centered around Nairobi Region.
+    var map = L.map('map').setView([-1.28333, 36.81667], 6);
+
+    // Add tile layer to map 
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+
+
+    // 3. Check if browser supports HTML5 Geolpcation API, get location every 10 seconds 
+    // Create a global navigator object using its property, geolocation. The object 
+    // allows devices to retrieve information about the geographical location of  a device.
+
+    if (!navigator.geolocation) {
+        // If user browser does not support this method
+        console.log("Your browser doesn't support geolocation feature!");
+    } else {
+        // if user browser supports geolocation, call below method every 5 seconds.
+        setInterval(() => {
+            // getPosition is a callback method
+            navigator.geolocation.getCurrentPosition(getPosition)
+        }, 10000);
+    }
+
+
+    // Initialise circle and marker
+    var marker, circle;
+
+    // Call back method that retrieves location information
+    function getPosition(position) {
+        console.log(position);
+
+        // Properties of position object
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var accuracy = position.coords.accuracy;
+        var altitude = position.coords.altitude;
+        var headedTo = position.coords.heading;
+
+        console.log("Lat: " + latitude, " >  long: " + longitude + " > Accuracy : " + 
+        accuracy + " > Altitude : " + altitude + "  > Heading : " + headedTo);
+
+
+        // Check if circle and marker already exist to prevent overlap 
+        if(marker) {
+            map.removeLayer(marker);
+        }
+
+        if (circle) {
+            map.removeLayer(circle);
+        }
+
+
+        // 4. Add location information to the map and use accuracy to draw a cirle
+        marker = L.marker([latitude, longitude]);
+        circle = L.circle([latitude, longitude], {radius: accuracy});
+
+        // Add circle and marker as a group 
+        var featureGroup = L.featureGroup([marker, circle]).addTo(map);
+
+        // To zoom out the map automatically to area of interest 
+        map.fitBounds(featureGroup.getBounds())
+
+
+    };
+
+</script>
+
+</html>
