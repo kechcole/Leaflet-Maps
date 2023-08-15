@@ -45,7 +45,7 @@
     </script>
 
 <script>
-    // 2. Initialise the map centered around Nairobi Region.
+    // 2. Initialise the map centered around Nairobi Region, zoom to level 6
     var map = L.map('map').setView([-1.28333, 36.81667], 6);
 
     // Add tile layer to map 
@@ -76,6 +76,8 @@
 
     // Call back method that retrieves location information
     function getPosition(position) {
+
+        // Print to the console
         console.log(position);
 
         // Properties of position object
@@ -108,7 +110,6 @@
 
         // To zoom out the map automatically to area of interest 
         map.fitBounds(featureGroup.getBounds())
-
 
     };
 
