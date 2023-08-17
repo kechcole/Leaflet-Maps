@@ -109,7 +109,7 @@
         // Add circle and marker as a group 
         var featureGroup = L.featureGroup([marker, circle]).addTo(map);
 
-        // To zoom out the map automatically to area of interest 
+        // Zoom out the map automatically to area of interest 
         map.fitBounds(featureGroup.getBounds())
 
     };
